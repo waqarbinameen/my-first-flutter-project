@@ -80,9 +80,8 @@ class _SignupWindowState extends State<SignupWindow> {
                             child: Image(
                                 height: 110.h,
                                 width: 110.w,
-                                color: Colors.black26,
-                                image: const AssetImage(
-                                    "assets/images/smile.png")),
+                                image:
+                                    const AssetImage("assets/images/Logo.png")),
                           ),
                         ),
                       )),
