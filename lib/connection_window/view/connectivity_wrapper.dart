@@ -29,46 +29,32 @@ class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
                 stream: connectivity.onConnectivityChanged,
                 builder: (_, snapshot) {
                   if (snapshot.hasData) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.active:
-                        {
-                          // print(snapshot.data!.data());
-                          return appUser != null
-                              ? appUser!.role == "student"
-                                  ? StudentWindow()
-                                  : TeacherWindow()
-                              : ChooseOptionsWindow();
-
-                          // if(widget.role==1){
-                          //   return TeacherDashboard();
-                          // }else{
-                          // return UserDashboard();
-                          // }
-                        }
-                      case ConnectionState.none:
+                    switch (snapshot.data) {
+                      case ConnectivityResult.none:
                         {
                           return InternetShowWindow();
                         }
-                      case ConnectionState.waiting:
-                        return InternetShowWindow();
+
                       default:
-                        return InternetShowWindow();
+                        // print(snapshot.data!.data());
+                        return appUser != null
+                            ? appUser!.role == "student"
+                                ? const StudentWindow()
+                                : const TeacherWindow()
+                            : const ChooseOptionsWindow();
+
+                      // if(widget.role==1){
+                      //   return TeacherDashboard();
+                      // }else{
+                      // return UserDashboard();
+                      // }
                     }
                   } else {
-                    return Material(
-                      color: Colors.white70,
-                      child: Center(
-                        child: Column(
-                          children: [
-                            CircularProgressIndicator(),
-                          ],
-                        ),
-                      ),
-                    );
+                    return const InternetShowWindow();
                   }
                 });
           } else {
-            return InternetShowWindow();
+            return const InternetShowWindow();
           }
         });
   }
