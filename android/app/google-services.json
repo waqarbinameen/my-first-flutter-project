@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "676141260192",
+    "project_id": "smsystem-f1b71",
+    "storage_bucket": "smsystem-f1b71.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:676141260192:android:5e059dac1c671f890618c5",
+        "android_client_info": {
+          "package_name": "com.softcode.school_management_system"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "676141260192-seiecarn9h0elpfgcg4sqpgjg72eecal.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBofRri8qFoMQyqbH1kyFroyPS2Pr3sOns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "676141260192-seiecarn9h0elpfgcg4sqpgjg72eecal.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
