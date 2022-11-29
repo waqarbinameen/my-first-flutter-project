@@ -19,7 +19,7 @@ class AddDetailsWindow extends StatefulWidget {
 class _AddDetailsWindowState extends State<AddDetailsWindow> {
   bool isShow = true;
   String picLabel = "Add Photo";
-  String role = "teacher";
+  String role = "student";
   Color picColor = const Color(0xff28C2A0);
   bool isShowConf = true;
   File? img;

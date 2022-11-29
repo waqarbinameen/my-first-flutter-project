@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,8 +6,7 @@ import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:school_management_system/auth/login_window/view/login_window.dart';
-
-import '../../../teacher_window/view/teacher_window.dart';
+import 'package:school_management_system/teacher_window/view/teacher_window.dart';
 
 class SignupWindow extends StatefulWidget {
   const SignupWindow({Key? key}) : super(key: key);
@@ -16,7 +16,10 @@ class SignupWindow extends StatefulWidget {
 }
 
 class _SignupWindowState extends State<SignupWindow> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final fireStore = FirebaseFirestore.instance.collection("usersDetail");
+  final _auth = FirebaseAuth.instance;
+  String role = "teacher";
+
   bool isShow = true;
   bool isShowConf = true;
   bool _isVisible = true;
@@ -225,23 +228,6 @@ class _SignupWindowState extends State<SignupWindow> {
                             child: InkWell(
                               onTap: () {
                                 if (formKey.currentState!.validate()) {
-                                  //ControllerAuth
-                                  // setState(() {
-                                  //   _isLoading = true;
-                                  // });
-                                  // await AuthControllerSign.instance
-                                  //     .Signup(
-                                  //         _fullName.text,
-                                  //         _uClass.text,
-                                  //         _uRollNo.text,
-                                  //         _uEmail.text,
-                                  //         _uPhoneNo.text,
-                                  //         _uConfPassword.text,
-                                  //         AuthControllerSign
-                                  //             .instance.proImage);
-                                  // setState(() {
-                                  //   _isLoading = false;
-                                  // });
                                   signUp();
                                 }
                               },
@@ -313,6 +299,11 @@ class _SignupWindowState extends State<SignupWindow> {
         .then((value) {
       setState(() {
         _isLoading = false;
+      });
+      String id = _auth.currentUser!.email.toString();
+      fireStore.doc(id).set({
+        "id": id,
+        "Role": role.toString(),
       });
       Get.snackbar("Information", "Account Created Successfully ");
       Get.off(() => const TeacherWindow());

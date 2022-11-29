@@ -50,7 +50,7 @@ class _AddDetailsWindowState extends State<AddDetailsWindow> {
   final TextEditingController _uAddress = TextEditingController();
   final fireStore = FirebaseFirestore.instance.collection("usersDetail");
   final _auth = FirebaseAuth.instance;
-  String role = "student";
+  String role = "teacher";
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

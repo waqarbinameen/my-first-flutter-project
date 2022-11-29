@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: ScreenUtilInit(builder: (context, _) {
-        return SplashWindow();
+        return const SplashWindow();
       }),
     );
   }

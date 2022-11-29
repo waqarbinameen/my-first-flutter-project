@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,7 +19,7 @@ class TeacherWindow extends StatefulWidget {
 
 class _TeacherWindowState extends State<TeacherWindow> {
   final _auth = FirebaseAuth.instance;
-  String? downloadURL;
+
   DateTime timeBackPressed = DateTime.now();
 
   @override
@@ -28,7 +27,7 @@ class _TeacherWindowState extends State<TeacherWindow> {
     return WillPopScope(
       onWillPop: () async {
         final diff = DateTime.now().difference(timeBackPressed);
-        final isExitWarn = diff >= Duration(seconds: 2);
+        final isExitWarn = diff >= const Duration(seconds: 2);
         timeBackPressed = DateTime.now();
         if (isExitWarn) {
           const message = "Press again to exit";
@@ -95,7 +94,7 @@ class _TeacherWindowState extends State<TeacherWindow> {
                                     loadingBuilder: (context, img, event) {
                                       if (event == null) return img;
                                       double progress =
-                                          (event!.expectedTotalBytes! /
+                                          (event.expectedTotalBytes! /
                                               event.cumulativeBytesLoaded);
 
                                       return CircularProgressIndicator(
@@ -290,25 +289,6 @@ class _TeacherWindowState extends State<TeacherWindow> {
         ),
       ),
     );
-  }
-
-  Future getData() async {
-    try {
-      await downloadURLExample();
-      return downloadURL;
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;
-    }
-  }
-
-  Future<void> downloadURLExample() async {
-    String id = _auth.currentUser!.email.toString();
-    downloadURL = await FirebaseStorage.instance
-        .ref('/profileImages/teachers')
-        .child(id)
-        .getDownloadURL();
-    debugPrint(downloadURL.toString());
   }
 
   void showDialogBox() {

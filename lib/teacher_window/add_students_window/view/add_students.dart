@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,9 @@ class AddStudentsWindow extends StatefulWidget {
 }
 
 class _AddStudentsWindowState extends State<AddStudentsWindow> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final fireStore = FirebaseFirestore.instance.collection("usersDetail");
+  final _auth = FirebaseAuth.instance;
+  String role = "student";
 
   bool isShow = true;
   bool isShowConf = true;
@@ -57,7 +60,7 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
         body: Column(
           children: [
             SizedBox(
-              height: 220.h,
+              height: 230.h,
               width: double.infinity,
               child: Stack(
                 children: [
@@ -111,7 +114,7 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
               ),
             ),
             SizedBox(
-              height: 30.h,
+              height: 10.h,
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -122,7 +125,7 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
                     child: Column(
                       children: [
                         Text(
-                          "Sign up Form",
+                          "Add Students",
                           style: TextStyle(
                               fontFamily: "Oswald",
                               fontWeight: FontWeight.bold,
@@ -286,6 +289,11 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
         .then((value) {
       setState(() {
         _isLoading = false;
+      });
+      String id = _auth.currentUser!.email.toString();
+      fireStore.doc(id).set({
+        "id": id,
+        "Role": role.toString(),
       });
       Get.snackbar("Information", "Student Add Successfully ");
       setState(() {

@@ -43,7 +43,7 @@ class _InternetShowWindowState extends State<InternetShowWindow> {
             bottom: 0.h,
             child: Center(
               child: SizedBox(
-                height: 120.h,
+                height: 200.h,
                 width: 240.w,
                 child: Card(
                     child: Column(
@@ -53,7 +53,7 @@ class _InternetShowWindowState extends State<InternetShowWindow> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontFamily: "Oswald",
-                          fontSize: 16.sp,
+                          fontSize: 26.sp,
                           color: Colors.orange),
                     ),
                     Icon(
@@ -65,8 +65,11 @@ class _InternetShowWindowState extends State<InternetShowWindow> {
                         Text(
                           "There is no internet Please connect with internet connection",
                           textAlign: TextAlign.center,
-                          style:
-                              TextStyle(fontFamily: "Oswald", fontSize: 16.sp),
+                          style: TextStyle(
+                            fontFamily: "Oswald",
+                            fontSize: 16.sp,
+                            color: const Color(0xff28C2A0),
+                          ),
                         ),
                       ],
                     ),
