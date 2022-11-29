@@ -23,7 +23,7 @@ class _StudentWindowState extends State<StudentWindow> {
     super.initState();
   }
 
-  bool _isData = true;
+  int role = 1;
   final _auth = FirebaseAuth.instance;
   DateTime timeBackPressed = DateTime.now();
   @override

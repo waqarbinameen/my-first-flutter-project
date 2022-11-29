@@ -11,7 +11,7 @@ class ChooseOptionsWindow extends StatefulWidget {
 }
 
 class _ChooseOptionsWindowState extends State<ChooseOptionsWindow> {
-  int option = 0;
+  int role = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,10 +95,10 @@ class _ChooseOptionsWindowState extends State<ChooseOptionsWindow> {
               InkWell(
                 onTap: () {
                   setState(() {
-                    option = 1;
+                    role = 1;
                   });
                   Get.off(() => LoginWindow(
-                        option: option,
+                        role: role,
                       ));
                 },
                 child: Container(
@@ -117,10 +117,10 @@ class _ChooseOptionsWindowState extends State<ChooseOptionsWindow> {
               InkWell(
                 onTap: () {
                   setState(() {
-                    option = 2;
+                    role = 2;
                   });
                   Get.off(() => LoginWindow(
-                        option: option,
+                        role: role,
                       ));
                 },
                 child: Container(

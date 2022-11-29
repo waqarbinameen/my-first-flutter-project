@@ -16,8 +16,8 @@ import '../../../global/models/app_user.dart';
 import '../../../teacher_window/view/teacher_window.dart';
 
 class LoginWindow extends StatefulWidget {
-  final int? option;
-  const LoginWindow({Key? key, this.option}) : super(key: key);
+  final int? role;
+  const LoginWindow({Key? key, this.role}) : super(key: key);
 
   @override
   State<LoginWindow> createState() => _LoginWindowState();
@@ -260,7 +260,7 @@ class _LoginWindowState extends State<LoginWindow> {
                       height: 20.h,
                     ),
                     Visibility(
-                      visible: widget.option == 1 ? false : true,
+                      visible: widget.role == 1 ? false : true,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -310,14 +310,16 @@ class _LoginWindowState extends State<LoginWindow> {
       setState(() {
         _isLoading = false;
       });
-      if (appUser!.role == "student") {
+      if ((appUser!.role == "student") && (widget.role == 1)) {
         Get.snackbar("Information", "Welcome Student Panel");
 
         Get.off(() => const StudentWindow());
-      } else if (appUser!.role == "teacher") {
+      } else if ((appUser!.role == "teacher") && (widget.role == 2)) {
         Get.snackbar("Information", "Welcome to Teacher Panel");
 
         Get.off(() => const TeacherWindow());
+      } else {
+        Get.snackbar("Error", "Please Choose Correct Role Option");
       }
     }).catchError((e) {
       setState(() {

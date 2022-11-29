@@ -42,12 +42,6 @@ class _ConnectivityWrapperState extends State<ConnectivityWrapper> {
                                 ? const StudentWindow()
                                 : const TeacherWindow()
                             : const ChooseOptionsWindow();
-
-                      // if(widget.role==1){
-                      //   return TeacherDashboard();
-                      // }else{
-                      // return UserDashboard();
-                      // }
                     }
                   } else {
                     return const InternetShowWindow();
