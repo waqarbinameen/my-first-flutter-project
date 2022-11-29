@@ -37,8 +37,10 @@ class _InternetShowWindowState extends State<InternetShowWindow> {
             ),
           ),
           Positioned(
-            left: 60.w,
-            top: 130.h,
+            left: 0.w,
+            right: 0.w,
+            top: 0.h,
+            bottom: 0.h,
             child: Center(
               child: SizedBox(
                 height: 120.h,
@@ -73,12 +75,6 @@ class _InternetShowWindowState extends State<InternetShowWindow> {
               ),
             ),
           ),
-          Positioned(
-              left: 0.w,
-              right: 0.w,
-              top: 0.h,
-              bottom: 0.h,
-              child: Image(image: AssetImage("assets/images/Logo.png"))),
           Positioned(
             bottom: -300.h,
             left: -20.w,
