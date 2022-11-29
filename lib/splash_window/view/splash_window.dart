@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animated_widgets/animated_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +83,12 @@ class _SplashWindowState extends State<SplashWindow> {
               right: 0.w,
               top: 0.h,
               bottom: 0.h,
-              child: const Image(image: AssetImage("assets/images/Logo.png"))),
+              child: OpacityAnimatedWidget.tween(
+                  opacityEnabled: 1, //define start value
+                  opacityDisabled: 0,
+                  duration: const Duration(seconds: 3),
+                  child: const Image(
+                      image: AssetImage("assets/images/Logo.png")))),
           Positioned(
             bottom: -300.h,
             left: -20.w,
