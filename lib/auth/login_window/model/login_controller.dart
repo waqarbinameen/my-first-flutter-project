@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:school_management_system/auth/login_window/view/login_window.dart';
 import 'package:school_management_system/auth/signup_window/view_model/signup_controller.dart';
+import 'package:school_management_system/choose_option_window/view/choose_options_window.dart';
 
 import '../../../teacher_window/view/teacher_window.dart';
 
@@ -22,7 +22,7 @@ class AuthControllerLogin extends GetxController {
   _setInitialView(User? user) {
     logger("Navigating from initial view");
     if (user == null) {
-      Get.offAll(() => const LoginWindow());
+      Get.offAll(() => const ChooseOptionsWindow());
     } else {
       Get.offAll(() => const TeacherWindow());
     }

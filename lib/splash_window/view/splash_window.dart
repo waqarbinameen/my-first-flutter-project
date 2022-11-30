@@ -1,16 +1,14 @@
 import 'dart:async';
 
 import 'package:animated_widgets/animated_widgets.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../auth/controller.dart';
 import '../../choose_option_window/view/choose_options_window.dart';
 import '../../connection_window/view/connectivity_wrapper.dart';
-import '../../global/models/app_user.dart';
-import '../../global/user_data.dart';
 
 class SplashWindow extends StatefulWidget {
   const SplashWindow({Key? key}) : super(key: key);
@@ -21,17 +19,7 @@ class SplashWindow extends StatefulWidget {
 
 class _SplashWindowState extends State<SplashWindow> {
   int mode = 0;
-
-  getUserData() async {
-    var doc = await FirebaseFirestore.instance
-        .collection('usersDetail')
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .get();
-    if (doc.exists) {
-      appUser = AppUser.fromJson(doc.data());
-    }
-  }
-
+  AuthController authController = AuthController();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -42,7 +30,7 @@ class _SplashWindowState extends State<SplashWindow> {
           Get.offAll(() => const ChooseOptionsWindow());
         });
       } else {
-        await getUserData();
+        await authController.getUserData();
         Timer(const Duration(seconds: 4), () {
           Get.offAll(() => const ConnectivityWrapper());
         });

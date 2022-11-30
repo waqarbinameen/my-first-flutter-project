@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:school_management_system/choose_option_window/view/choose_options_window.dart';
 
 import '../../global/user_data.dart';
-import '../add_details_window/view/add_details.dart';
+import '../add_details_window/view/add_teachers_details.dart';
 import '../add_students_window/view/add_students.dart';
 import '../profile_window/view/profile_window.dart';
 

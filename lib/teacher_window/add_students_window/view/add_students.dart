@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -25,13 +26,15 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
   bool _isVisible = true;
   bool _isLoading = false;
   String _setPassword = "";
-  bool shouldValidate = true;
+
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final TextEditingController _uEmail = TextEditingController();
 
   final TextEditingController _uSetPassword = TextEditingController();
   final TextEditingController _uConfPassword = TextEditingController();
+  final firstFieldFocusNode = FocusNode();
+  final secondFieldFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -134,9 +137,7 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
                         ),
                         TextFormField(
                           controller: _uEmail,
-                          autovalidateMode: shouldValidate
-                              ? AutovalidateMode.onUserInteraction
-                              : null,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) => EmailValidator.validate(value!)
                               ? null
                               : "Please enter a valid email",
@@ -149,38 +150,48 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
                                 color: Color(0xff0C46C4),
                               )),
                         ),
-                        TextFormField(
-                          controller: _uSetPassword,
-                          autovalidateMode: shouldValidate
-                              ? AutovalidateMode.onUserInteraction
-                              : null,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Enter password";
+                        RawKeyboardListener(
+                          focusNode: firstFieldFocusNode,
+                          onKey: (event) {
+                            if (event.logicalKey == LogicalKeyboardKey.tab) {
+                              firstFieldFocusNode.nextFocus();
                             }
-                            return null;
                           },
-                          onChanged: (value) {
-                            _setPassword = value;
-                          },
-                          obscureText: isShow,
-                          decoration: InputDecoration(
-                              labelText: "Set Password",
-                              labelStyle: TextStyle(
-                                fontFamily: "Roboto",
-                                fontSize: 14.sp,
-                              ),
-                              suffixIcon: InkWell(
-                                onTap: () {
-                                  _togglePasswordView();
-                                },
-                                child: Icon(
-                                  isShow
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: const Color(0xff0C46C4),
+                          child: TextFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            onEditingComplete: () {
+                              secondFieldFocusNode.requestFocus();
+                            },
+                            controller: _uSetPassword,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Enter password";
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              _setPassword = value;
+                            },
+                            obscureText: isShow,
+                            decoration: InputDecoration(
+                                labelText: "Set Password",
+                                labelStyle: TextStyle(
+                                  fontFamily: "Roboto",
+                                  fontSize: 14.sp,
                                 ),
-                              )),
+                                suffixIcon: InkWell(
+                                  onTap: () {
+                                    _togglePasswordView();
+                                  },
+                                  child: Icon(
+                                    isShow
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: const Color(0xff0C46C4),
+                                  ),
+                                )),
+                          ),
                         ),
                         Visibility(
                           visible: _isVisible,
@@ -194,9 +205,8 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
                             width: 400,
                             height: 150,
                             onSuccess: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Password is Strong")));
+                              Get.snackbar("Information", "Password is Strong");
+
                               setState(() {
                                 _isVisible = false;
                               });
@@ -210,10 +220,9 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
                           ),
                         ),
                         TextFormField(
+                          focusNode: secondFieldFocusNode,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           controller: _uConfPassword,
-                          autovalidateMode: shouldValidate
-                              ? AutovalidateMode.onUserInteraction
-                              : null,
                           validator: (value) {
                             if (value!.isEmpty) {
                               return "Enter password";
@@ -254,7 +263,11 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
                           child: Center(
                             child: InkWell(
                               onTap: () {
-                                Get.off(() => const TeacherWindow());
+                                if (formKey.currentState!.validate()) {
+                                  showDialogBox();
+                                } else {
+                                  Get.off(() => const TeacherWindow());
+                                }
                               },
                               child: Text(
                                 "Back",
@@ -278,6 +291,25 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
     );
   }
 
+  void showDialogBox() {
+    Get.defaultDialog(
+        title: "Warning...!",
+        backgroundColor: const Color(0xff28C2A0),
+        titleStyle: const TextStyle(color: Colors.white),
+        middleTextStyle: const TextStyle(color: Colors.white),
+        textConfirm: "Yes",
+        onConfirm: () {
+          Get.offAll(() => const TeacherWindow());
+        },
+        textCancel: "No",
+        cancelTextColor: Colors.white,
+        confirmTextColor: Colors.white,
+        buttonColor: const Color(0xff0C46C4),
+        barrierDismissible: false,
+        radius: 10,
+        content: const Text("Are you sure to leave?"));
+  }
+
   void signUp() {
     setState(() {
       _isLoading = true;
@@ -295,13 +327,10 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
         "id": id,
         "Role": role.toString(),
       });
+      _uEmail.clear();
+      _uConfPassword.clear();
+      _uSetPassword.clear();
       Get.snackbar("Information", "Student Add Successfully ");
-      setState(() {
-        _uEmail.clear();
-        _uConfPassword.clear();
-        _uSetPassword.clear();
-        shouldValidate = false;
-      });
     }).onError((error, stackTrace) {
       Get.snackbar("Error Occurred", error.toString());
       setState(() {

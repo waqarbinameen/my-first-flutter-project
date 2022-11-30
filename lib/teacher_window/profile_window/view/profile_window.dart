@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../../auth/controller.dart';
 import '../../../global/user_data.dart';
 import '../../../teacher_window/view/teacher_window.dart';
-import '../../add_details_window/view/add_details.dart';
+import '../../add_details_window/view/add_teachers_details.dart';
 
 class ProfileWindow extends StatefulWidget {
   const ProfileWindow({Key? key}) : super(key: key);
@@ -21,6 +22,8 @@ class _ProfileWindowState extends State<ProfileWindow> {
   String? downloadURL;
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
+
+  AuthController authController = AuthController();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -81,7 +84,7 @@ class _ProfileWindowState extends State<ProfileWindow> {
                                     loadingBuilder: (context, img, event) {
                                       if (event == null) return img;
                                       double progress =
-                                          (event!.expectedTotalBytes! /
+                                          (event.expectedTotalBytes! /
                                               event.cumulativeBytesLoaded);
 
                                       return CircularProgressIndicator(
@@ -281,8 +284,10 @@ class _ProfileWindowState extends State<ProfileWindow> {
                         height: 30.h,
                       ),
                       InkWell(
-                        onTap: () {
-                          Get.off(() => const AddDetailsWindow());
+                        onTap: () async {
+                          await Get.off(() => const AddDetailsWindow());
+                          await authController.getUserData();
+                          setState(() {});
                         },
                         child: Container(
                           height: 50.h,

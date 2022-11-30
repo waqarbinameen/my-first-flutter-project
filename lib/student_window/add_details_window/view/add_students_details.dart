@@ -7,16 +7,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:school_management_system/auth/controller.dart';
+import 'package:school_management_system/global/models/app_user.dart';
+import 'package:school_management_system/global/user_data.dart';
 import 'package:school_management_system/student_window/view/student_window.dart';
 
-class AddDetailsWindow extends StatefulWidget {
-  const AddDetailsWindow({Key? key}) : super(key: key);
+class AddStudentsDetailsWindow extends StatefulWidget {
+  const AddStudentsDetailsWindow({Key? key}) : super(key: key);
 
   @override
-  State<AddDetailsWindow> createState() => _AddDetailsWindowState();
+  State<AddStudentsDetailsWindow> createState() =>
+      _AddStudentsDetailsWindowState();
 }
 
-class _AddDetailsWindowState extends State<AddDetailsWindow> {
+class _AddStudentsDetailsWindowState extends State<AddStudentsDetailsWindow> {
+  AuthController auth = AuthController();
   bool isShow = true;
   String picLabel = "Add Photo";
   String role = "student";
@@ -50,6 +55,27 @@ class _AddDetailsWindowState extends State<AddDetailsWindow> {
   final TextEditingController _uAddress = TextEditingController();
   final fireStore = FirebaseFirestore.instance.collection("usersDetail");
   final _auth = FirebaseAuth.instance;
+  late String imgUrl = "";
+  loadingStudentData() {
+    if (appUser == null) return;
+    AppUser s = appUser!;
+    if (s.fatherName == null || s.sClass == null) return;
+
+    _fullName.text = s.fullName!;
+    _uFatherName.text = s.fatherName!;
+    _uClass.text = s.sClass!;
+    _uRollNo.text = s.rollNo!;
+    _uPhoneNo.text = s.phoneNo!;
+    _uAddress.text = s.address!;
+    imgUrl = s.profileImage!;
+  }
+
+  @override
+  void initState() {
+    loadingStudentData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -112,12 +138,31 @@ class _AddDetailsWindowState extends State<AddDetailsWindow> {
                                           width: 200.w,
                                           image: FileImage(img!.absolute)),
                                     )
-                                  : Image(
-                                      height: 110.h,
-                                      width: 110.w,
-                                      color: Colors.black26,
-                                      image: const AssetImage(
-                                          "assets/images/smile.png")),
+                                  : imgUrl.isNotEmpty
+                                      ? ClipOval(
+                                          clipBehavior: Clip.hardEdge,
+                                          child: Image(
+                                              fit: BoxFit.cover,
+                                              height: 200.h,
+                                              width: 200.w,
+                                              image: NetworkImage(imgUrl)),
+                                        )
+                                      : img != null
+                                          ? ClipOval(
+                                              clipBehavior: Clip.hardEdge,
+                                              child: Image(
+                                                  fit: BoxFit.cover,
+                                                  height: 200.h,
+                                                  width: 200.w,
+                                                  image:
+                                                      FileImage(img!.absolute)),
+                                            )
+                                          : Image(
+                                              height: 110.h,
+                                              width: 110.w,
+                                              color: Colors.black26,
+                                              image: const AssetImage(
+                                                  "assets/images/smile.png")),
                             ),
                           ),
                         ),
@@ -282,6 +327,7 @@ class _AddDetailsWindowState extends State<AddDetailsWindow> {
                                 if (img != null) {
                                   if (formKey.currentState!.validate()) {
                                     addDetails();
+                                    auth.getUserData();
                                   }
                                 } else {
                                   setState(() {
@@ -371,6 +417,7 @@ class _AddDetailsWindowState extends State<AddDetailsWindow> {
         setState(() {
           _isLoading = false;
         });
+        auth.getUserData();
         Get.snackbar("Information", "Details Save Successfully ");
         Get.off(() => const StudentWindow());
       }).onError((error, stackTrace) {

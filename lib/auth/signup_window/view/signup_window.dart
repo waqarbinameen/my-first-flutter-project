@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:school_management_system/auth/login_window/view/login_window.dart';
-import 'package:school_management_system/teacher_window/view/teacher_window.dart';
+
+import '../../../global/models/app_user.dart';
+import '../../../global/user_data.dart';
 
 class SignupWindow extends StatefulWidget {
   const SignupWindow({Key? key}) : super(key: key);
@@ -32,6 +35,18 @@ class _SignupWindowState extends State<SignupWindow> {
   final TextEditingController _uSetPassword = TextEditingController();
   final TextEditingController _uConfPassword = TextEditingController();
 
+  getUserData() async {
+    var doc = await FirebaseFirestore.instance
+        .collection('usersDetail')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .get();
+    if (doc.exists) {
+      appUser = AppUser.fromJson(doc.data());
+    }
+  }
+
+  final firstFieldFocusNode = FocusNode();
+  final secondFieldFocusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -126,36 +141,49 @@ class _SignupWindowState extends State<SignupWindow> {
                                 color: Color(0xff0C46C4),
                               )),
                         ),
-                        TextFormField(
-                          controller: _uSetPassword,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Enter password";
+                        RawKeyboardListener(
+                          focusNode: firstFieldFocusNode,
+                          onKey: (event) {
+                            if (event.logicalKey == LogicalKeyboardKey.tab) {
+                              firstFieldFocusNode.nextFocus();
                             }
-                            return null;
                           },
-                          onChanged: (value) {
-                            _setPassword = value;
-                          },
-                          obscureText: isShow,
-                          decoration: InputDecoration(
-                              labelText: "Set Password",
-                              labelStyle: TextStyle(
-                                fontFamily: "Roboto",
-                                fontSize: 14.sp,
-                              ),
-                              suffixIcon: InkWell(
-                                onTap: () {
-                                  _togglePasswordView();
-                                },
-                                child: Icon(
-                                  isShow
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: const Color(0xff0C46C4),
+                          child: TextFormField(
+                            controller: _uSetPassword,
+                            autofocus: false,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Enter password";
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              _setPassword = value;
+                            },
+                            obscureText: isShow,
+                            onEditingComplete: () {
+                              secondFieldFocusNode.requestFocus();
+                            },
+                            decoration: InputDecoration(
+                                labelText: "Set Password",
+                                labelStyle: TextStyle(
+                                  fontFamily: "Roboto",
+                                  fontSize: 14.sp,
                                 ),
-                              )),
+                                suffixIcon: InkWell(
+                                  onTap: () {
+                                    _togglePasswordView();
+                                  },
+                                  child: Icon(
+                                    isShow
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: const Color(0xff0C46C4),
+                                  ),
+                                )),
+                          ),
                         ),
                         Visibility(
                           visible: _isVisible,
@@ -186,6 +214,7 @@ class _SignupWindowState extends State<SignupWindow> {
                         ),
                         TextFormField(
                           controller: _uConfPassword,
+                          focusNode: secondFieldFocusNode,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -226,7 +255,7 @@ class _SignupWindowState extends State<SignupWindow> {
                           ),
                           child: Center(
                             child: InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 if (formKey.currentState!.validate()) {
                                   signUp();
                                 }
@@ -262,7 +291,7 @@ class _SignupWindowState extends State<SignupWindow> {
                             ),
                             InkWell(
                               onTap: () {
-                                Get.offAll(() => const LoginWindow());
+                                Get.offAll(() => const LoginWindow(role: 2));
                               },
                               child: Text(
                                 "Login Here ",
@@ -306,7 +335,7 @@ class _SignupWindowState extends State<SignupWindow> {
         "Role": role.toString(),
       });
       Get.snackbar("Information", "Account Created Successfully ");
-      Get.off(() => const TeacherWindow());
+      Get.off(() => const LoginWindow(role: 2));
     }).onError((error, stackTrace) {
       Get.snackbar("Error Occurred", error.toString());
       setState(() {

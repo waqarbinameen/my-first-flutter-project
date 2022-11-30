@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +16,7 @@ import '../../../teacher_window/view/teacher_window.dart';
 
 class LoginWindow extends StatefulWidget {
   final int? role;
-  const LoginWindow({Key? key, this.role}) : super(key: key);
+  const LoginWindow({Key? key, required this.role}) : super(key: key);
 
   @override
   State<LoginWindow> createState() => _LoginWindowState();
@@ -38,7 +37,6 @@ class _LoginWindowState extends State<LoginWindow> {
   //     : Get.put(AuthControllerLogin());
   @override
   Widget build(BuildContext context) {
-    Connectivity connectivity = Connectivity();
     return Scaffold(
         body: Column(
       children: [

@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:school_management_system/auth/controller.dart';
+import 'package:school_management_system/global/models/app_user.dart';
+import 'package:school_management_system/global/user_data.dart';
 
 import '../../../teacher_window/view/teacher_window.dart';
 
@@ -51,6 +54,26 @@ class _AddDetailsWindowState extends State<AddDetailsWindow> {
   final fireStore = FirebaseFirestore.instance.collection("usersDetail");
   final _auth = FirebaseAuth.instance;
   String role = "teacher";
+  late String imgUrl = "";
+  AuthController authCon = AuthController();
+  loadFormData() {
+    if (appUser == null) return;
+    AppUser t = appUser!;
+    if (t.fullName == null || t.subject == null) return;
+    _fullName.text = t.fullName!;
+    _uFatherName.text = t.fatherName!;
+    _uSubject.text = t.subject!;
+    _uPhoneNo.text = t.phoneNo!;
+    _uAddress.text = t.address!;
+    imgUrl = t.profileImage!;
+  }
+
+  @override
+  void initState() {
+    loadFormData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -113,12 +136,21 @@ class _AddDetailsWindowState extends State<AddDetailsWindow> {
                                           width: 200.w,
                                           image: FileImage(img!.absolute)),
                                     )
-                                  : Image(
-                                      height: 110.h,
-                                      width: 110.w,
-                                      color: Colors.black26,
-                                      image: const AssetImage(
-                                          "assets/images/smile.png")),
+                                  : imgUrl.isNotEmpty
+                                      ? ClipOval(
+                                          clipBehavior: Clip.hardEdge,
+                                          child: Image(
+                                              fit: BoxFit.cover,
+                                              height: 200.h,
+                                              width: 200.w,
+                                              image: NetworkImage(imgUrl)),
+                                        )
+                                      : Image(
+                                          height: 110.h,
+                                          width: 110.w,
+                                          color: Colors.black26,
+                                          image: const AssetImage(
+                                              "assets/images/smile.png")),
                             ),
                           ),
                         ),
@@ -266,6 +298,7 @@ class _AddDetailsWindowState extends State<AddDetailsWindow> {
                                 if (img != null) {
                                   if (formKey.currentState!.validate()) {
                                     addDetails();
+                                    authCon.getUserData();
                                   }
                                 } else {
                                   setState(() {

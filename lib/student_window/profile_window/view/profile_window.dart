@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:school_management_system/student_window/view/student_window.dart';
 
 import '../../../global/user_data.dart';
-import '../../add_details_window/view/add_details.dart';
+import '../../add_details_window/view/add_students_details.dart';
 
 class ProfileWindow extends StatefulWidget {
   const ProfileWindow({Key? key}) : super(key: key);
@@ -299,7 +299,7 @@ class _ProfileWindowState extends State<ProfileWindow> {
                       ),
                       InkWell(
                         onTap: () {
-                          Get.off(() => const AddDetailsWindow());
+                          Get.off(() => const AddStudentsDetailsWindow());
                         },
                         child: Container(
                           height: 50.h,

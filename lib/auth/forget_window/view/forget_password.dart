@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:school_management_system/auth/login_window/view/login_window.dart';
 import 'package:school_management_system/auth/signup_window/view/signup_window.dart';
+import 'package:school_management_system/choose_option_window/view/choose_options_window.dart';
 
 class ForgetPasswordWindow extends StatefulWidget {
   const ForgetPasswordWindow({Key? key}) : super(key: key);
@@ -195,7 +195,7 @@ class _ForgetPasswordWindowState extends State<ForgetPasswordWindow> {
         _isLoading = false;
       });
       Get.snackbar("Information", "Reset Link Send Successfully");
-      Get.to(() => const LoginWindow());
+      Get.to(() => const ChooseOptionsWindow());
     }).onError((error, stackTrace) {
       setState(() {
         _isLoading = false;
