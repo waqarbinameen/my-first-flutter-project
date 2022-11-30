@@ -168,9 +168,9 @@ class _TeacherWindowState extends State<TeacherWindow> {
               child: Stack(
                 children: [
                   Positioned(
-                    top: -330.h,
-                    left: -30.w,
-                    right: -30.w,
+                    top: -335.h,
+                    left: -40.w,
+                    right: -40.w,
                     child: Container(
                       height: 440.h,
                       width: 440.w,
