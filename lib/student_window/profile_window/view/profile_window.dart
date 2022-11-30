@@ -10,14 +10,14 @@ import 'package:school_management_system/student_window/view/student_window.dart
 import '../../../global/user_data.dart';
 import '../../add_details_window/view/add_students_details.dart';
 
-class ProfileWindow extends StatefulWidget {
-  const ProfileWindow({Key? key}) : super(key: key);
+class StudentProfileWindow extends StatefulWidget {
+  const StudentProfileWindow({Key? key}) : super(key: key);
 
   @override
-  State<ProfileWindow> createState() => _ProfileWindowState();
+  State<StudentProfileWindow> createState() => _StudentProfileWindowState();
 }
 
-class _ProfileWindowState extends State<ProfileWindow> {
+class _StudentProfileWindowState extends State<StudentProfileWindow> {
   final _auth = FirebaseAuth.instance;
   final fireStore = FirebaseFirestore.instance.collection("usersDetail");
 

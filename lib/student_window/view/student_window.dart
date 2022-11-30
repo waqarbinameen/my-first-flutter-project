@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -24,6 +26,7 @@ class _StudentWindowState extends State<StudentWindow> {
   }
 
   int role = 1;
+  bool _isLoading = false;
   final _auth = FirebaseAuth.instance;
   DateTime timeBackPressed = DateTime.now();
   @override
@@ -114,7 +117,8 @@ class _StudentWindowState extends State<StudentWindow> {
                       ),
                     ),
                     onTap: () {
-                      Get.to(() => const ProfileWindow());
+                      Navigator.pop(context);
+                      Get.to(() => const StudentProfileWindow());
                     },
                   ),
                   ListTile(
@@ -131,6 +135,22 @@ class _StudentWindowState extends State<StudentWindow> {
                     onTap: () {
                       Navigator.pop(context);
                       showDialogBox();
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.logout_outlined,
+                      color: Colors.white,
+                    ),
+                    title: const Text(
+                      "Delete Account",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      showDialogBoxDeleteDoc();
                     },
                   ),
                 ])),
@@ -281,7 +301,7 @@ class _StudentWindowState extends State<StudentWindow> {
                   ),
                   InkWell(
                     onTap: () {
-                      Get.off(() => const ProfileWindow());
+                      Get.off(() => const StudentProfileWindow());
                     },
                     child: Container(
                       height: 100.h,
@@ -335,7 +355,7 @@ class _StudentWindowState extends State<StudentWindow> {
                   ),
                   InkWell(
                     onTap: () {
-                      //Get.off(() => const ProfileWindow());
+                      showDialogBoxDeleteDoc();
                     },
                     child: Container(
                       height: 100.h,
@@ -343,20 +363,28 @@ class _StudentWindowState extends State<StudentWindow> {
                       decoration: BoxDecoration(
                           color: const Color(0xff28C2A0).withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12.r)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(
-                            Icons.person_off,
-                            size: 60.h,
-                            color: const Color(0xff0C46C4),
-                          ),
-                          Text(
-                            "Delete Account",
-                            style: TextStyle(
-                                fontFamily: "Oswald", fontSize: 14.sp),
-                          ),
-                        ],
+                      child: Center(
+                        child: _isLoading
+                            ? const CircularProgressIndicator(
+                                color: Color(0xff0C46C4),
+                                strokeWidth: 5,
+                              )
+                            : Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(
+                                    Icons.cloud_off,
+                                    size: 60.h,
+                                    color: const Color(0xff0C46C4),
+                                  ),
+                                  Text(
+                                    "Delete Account",
+                                    style: TextStyle(
+                                        fontFamily: "Oswald", fontSize: 14.sp),
+                                  ),
+                                ],
+                              ),
                       ),
                     ),
                   ),
@@ -367,6 +395,75 @@ class _StudentWindowState extends State<StudentWindow> {
         ),
       ),
     );
+  }
+
+  void showDialogBoxDeleteDoc() {
+    Get.defaultDialog(
+        title: "Warning...!",
+        backgroundColor: const Color(0xff28C2A0),
+        titleStyle: const TextStyle(
+            color: Colors.deepOrangeAccent,
+            fontWeight: FontWeight.bold,
+            fontFamily: "Roboto"),
+        middleTextStyle: const TextStyle(color: Colors.white),
+        textConfirm: "Confirm",
+        onConfirm: () async {
+          setState(() {
+            _isLoading = true;
+          });
+          Navigator.pop(context);
+          String id = _auth.currentUser!.email.toString();
+          await _auth.currentUser?.delete().then((value) async {
+            try {
+              await FirebaseFirestore.instance
+                  .collection("usersDetail")
+                  .doc(id)
+                  .delete()
+                  .then((value) async {
+                final desertRef = firebase_storage.FirebaseStorage.instance
+                    .ref('/profileImages/students/$id');
+                await desertRef.delete();
+                _auth.signOut();
+                Get.snackbar("Information", "Successfully Account Deleted");
+                Get.offAll(() => const ChooseOptionsWindow());
+                setState(() {
+                  _isLoading = false;
+                });
+              }).onError((error, stackTrace) {
+                setState(() {
+                  _isLoading = false;
+                });
+                Get.snackbar("Error", error.toString());
+              });
+            } catch (e) {
+              return;
+            }
+          });
+        },
+        textCancel: "Cancel",
+        cancelTextColor: Colors.white,
+        confirmTextColor: Colors.white,
+        buttonColor: const Color(0xff0C46C4),
+        barrierDismissible: false,
+        radius: 10,
+        content: Padding(
+            padding: EdgeInsets.all(10.h),
+            child: Wrap(
+              children: const [
+                Text(
+                  "Are you sure to delete account?",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.justify,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text(
+                    "Deleting your account will delete your access and all your information.",
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+              ],
+            )));
   }
 
   void showDialogBox() {
