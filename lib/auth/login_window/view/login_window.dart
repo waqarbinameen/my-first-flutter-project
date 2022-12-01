@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:school_management_system/auth/forget_window/view/forget_password.dart';
@@ -23,8 +24,21 @@ class LoginWindow extends StatefulWidget {
 }
 
 class _LoginWindowState extends State<LoginWindow> {
+  Future<UserCredential> signInWithFacebook() async {
+    // Trigger the sign-in flow
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+    // Once signed in, return the UserCredential
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
+
   bool isShow = true;
   bool _isLoading = false;
+  bool _isLoadingLogin = false;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _uEmail = TextEditingController();
@@ -250,6 +264,59 @@ class _LoginWindowState extends State<LoginWindow> {
                                 color: const Color(0xff0C46C4),
                                 fontFamily: "Roboto",
                                 fontSize: 20.sp),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        setState(() {
+                          _isLoadingLogin = true;
+                        });
+                        await signInWithFacebook().then((value) {
+                          Get.snackbar("Information",
+                              "Successfully Login with facebook");
+                          Get.offAll(() => const TeacherWindow());
+                          setState(() {
+                            _isLoadingLogin = false;
+                          });
+                        }).onError((error, stackTrace) {
+                          setState(() {
+                            _isLoadingLogin = false;
+                          });
+                          debugPrint(error.toString());
+                          Get.snackbar("Error", error.toString());
+                        });
+                      },
+                      child: Container(
+                        height: 50.h,
+                        width: 350.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          border: Border.all(
+                            width: 2,
+                            color: const Color(0xff28C2A0),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Image(
+                                  image:
+                                      AssetImage("assets/images/facebook.png")),
+                              Text(
+                                "Login with Facebook",
+                                style: TextStyle(
+                                    color: const Color(0xff0C46C4),
+                                    fontFamily: "Roboto",
+                                    fontSize: 20.sp),
+                              ),
+                            ],
                           ),
                         ),
                       ),
