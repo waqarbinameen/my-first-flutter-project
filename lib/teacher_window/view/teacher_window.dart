@@ -322,7 +322,7 @@ class _TeacherWindowState extends State<TeacherWindow> {
                   ),
                   InkWell(
                     onTap: () {
-                      Get.off(() => const AddDetailsWindow());
+                      Get.to(() => const AddDetailsWindow());
                     },
                     child: Container(
                       height: 100.h,
@@ -349,7 +349,7 @@ class _TeacherWindowState extends State<TeacherWindow> {
                   ),
                   InkWell(
                     onTap: () {
-                      Get.off(() => const ProfileWindow());
+                      Get.to(() => const ProfileWindow());
                     },
                     child: Container(
                       height: 100.h,

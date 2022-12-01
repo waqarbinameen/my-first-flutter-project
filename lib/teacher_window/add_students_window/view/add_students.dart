@@ -137,6 +137,7 @@ class _AddStudentsWindowState extends State<AddStudentsWindow> {
                         ),
                         TextFormField(
                           controller: _uEmail,
+                          keyboardType: TextInputType.emailAddress,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) => EmailValidator.validate(value!)
                               ? null

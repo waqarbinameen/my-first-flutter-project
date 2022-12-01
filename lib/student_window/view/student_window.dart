@@ -162,9 +162,9 @@ class _StudentWindowState extends State<StudentWindow> {
               child: Stack(
                 children: [
                   Positioned(
-                    top: -330.h,
-                    left: -30.w,
-                    right: -30.w,
+                    top: -335.h,
+                    left: -40.w,
+                    right: -40.w,
                     child: Container(
                       height: 440.h,
                       width: 440.w,
@@ -274,7 +274,7 @@ class _StudentWindowState extends State<StudentWindow> {
                   ),
                   InkWell(
                     onTap: () {
-                      Get.off(() => const AddStudentsDetailsWindow());
+                      Get.to(() => const AddStudentsDetailsWindow());
                     },
                     child: Container(
                       height: 100.h,
@@ -301,7 +301,7 @@ class _StudentWindowState extends State<StudentWindow> {
                   ),
                   InkWell(
                     onTap: () {
-                      Get.off(() => const StudentProfileWindow());
+                      Get.to(() => const StudentProfileWindow());
                     },
                     child: Container(
                       height: 100.h,

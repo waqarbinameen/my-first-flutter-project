@@ -291,7 +291,7 @@ class _SignupWindowState extends State<SignupWindow> {
                             ),
                             InkWell(
                               onTap: () {
-                                Get.offAll(() => const LoginWindow(role: 2));
+                                Get.off(() => const LoginWindow(role: 2));
                               },
                               child: Text(
                                 "Login Here ",

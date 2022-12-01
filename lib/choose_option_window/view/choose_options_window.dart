@@ -97,7 +97,7 @@ class _ChooseOptionsWindowState extends State<ChooseOptionsWindow> {
                   setState(() {
                     role = 1;
                   });
-                  Get.off(() => LoginWindow(
+                  Get.to(() => LoginWindow(
                         role: role,
                       ));
                 },
@@ -119,7 +119,7 @@ class _ChooseOptionsWindowState extends State<ChooseOptionsWindow> {
                   setState(() {
                     role = 2;
                   });
-                  Get.off(() => LoginWindow(
+                  Get.to(() => LoginWindow(
                         role: role,
                       ));
                 },
