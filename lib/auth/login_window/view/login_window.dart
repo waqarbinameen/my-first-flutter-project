@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:school_management_system/auth/forget_window/view/forget_password.dart';
 import 'package:school_management_system/auth/login_with_phone/login_with_phone.dart';
 import 'package:school_management_system/auth/signup_window/view/signup_window.dart';
@@ -24,6 +25,24 @@ class LoginWindow extends StatefulWidget {
 }
 
 class _LoginWindowState extends State<LoginWindow> {
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
   Future<UserCredential> signInWithFacebook() async {
     // Trigger the sign-in flow
     final LoginResult loginResult = await FacebookAuth.instance.login();
@@ -311,6 +330,49 @@ class _LoginWindowState extends State<LoginWindow> {
                                       AssetImage("assets/images/facebook.png")),
                               Text(
                                 "Login with Facebook",
+                                style: TextStyle(
+                                    color: const Color(0xff0C46C4),
+                                    fontFamily: "Roboto",
+                                    fontSize: 20.sp),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        await signInWithGoogle().then((value) {
+                          Get.snackbar(
+                              "Information", "Successfully Login with Google");
+                        }).onError((error, stackTrace) {
+                          debugPrint(error.toString());
+                          Get.snackbar("Error", error.toString());
+                        });
+                      },
+                      child: Container(
+                        height: 50.h,
+                        width: 350.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.r),
+                          border: Border.all(
+                            width: 2,
+                            color: const Color(0xff28C2A0),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              const Image(
+                                  image:
+                                      AssetImage("assets/images/google.png")),
+                              Text(
+                                "Login with Google",
                                 style: TextStyle(
                                     color: const Color(0xff0C46C4),
                                     fontFamily: "Roboto",

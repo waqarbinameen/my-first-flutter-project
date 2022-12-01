@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My App</string>
-    <string name="facebook_app_id">facebookAppID</string>
-    <string name="fb_login_protocol_scheme">AppCode</string>
-    <string name="facebook_client_token">HashCode</string>
+    <string name="facebook_app_id">APPID</string>
+    <string name="fb_login_protocol_scheme">APPCODE</string>
+    <string name="facebook_client_token">HASHCODE</string>
 
 </resources>
