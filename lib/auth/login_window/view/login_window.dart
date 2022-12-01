@@ -279,7 +279,7 @@ class _LoginWindowState extends State<LoginWindow> {
                         await signInWithFacebook().then((value) {
                           Get.snackbar("Information",
                               "Successfully Login with facebook");
-                          Get.offAll(() => const TeacherWindow());
+
                           setState(() {
                             _isLoadingLogin = false;
                           });
