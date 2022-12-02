@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:school_management_system/auth/login_window/view/login_window.dart';
+import 'package:school_management_system/auth/login_options_window/view/login_options_window.dart';
 
 class ChooseOptionsWindow extends StatefulWidget {
   const ChooseOptionsWindow({Key? key}) : super(key: key);
@@ -97,9 +97,7 @@ class _ChooseOptionsWindowState extends State<ChooseOptionsWindow> {
                   setState(() {
                     role = 1;
                   });
-                  Get.to(() => LoginWindow(
-                        role: role,
-                      ));
+                  Get.to(() => LoginOptionsWindow(role: role));
                 },
                 child: Container(
                   height: 100.h,
@@ -119,9 +117,7 @@ class _ChooseOptionsWindowState extends State<ChooseOptionsWindow> {
                   setState(() {
                     role = 2;
                   });
-                  Get.to(() => LoginWindow(
-                        role: role,
-                      ));
+                  Get.to(() => LoginOptionsWindow(role: role));
                 },
                 child: Container(
                   height: 100.h,

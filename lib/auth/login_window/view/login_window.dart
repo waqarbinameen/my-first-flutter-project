@@ -7,9 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:school_management_system/auth/forget_window/view/forget_password.dart';
-import 'package:school_management_system/auth/login_with_phone/login_with_phone.dart';
+import 'package:school_management_system/auth/login_options_window/view/login_options_window.dart';
 import 'package:school_management_system/auth/signup_window/view/signup_window.dart';
-import 'package:school_management_system/choose_option_window/view/choose_options_window.dart';
 import 'package:school_management_system/global/user_data.dart';
 import 'package:school_management_system/student_window/view/student_window.dart';
 
@@ -238,7 +237,7 @@ class _LoginWindowState extends State<LoginWindow> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Change option",
+                          "Change login option",
                           style:
                               TextStyle(fontFamily: "Roboto", fontSize: 12.sp),
                         ),
@@ -247,7 +246,7 @@ class _LoginWindowState extends State<LoginWindow> {
                         ),
                         InkWell(
                           onTap: () {
-                            Get.off(() => const ChooseOptionsWindow());
+                            Get.off(() => const LoginOptionsWindow(role: 2));
                           },
                           child: Text(
                             "Click here",
@@ -258,130 +257,6 @@ class _LoginWindowState extends State<LoginWindow> {
                           ),
                         ),
                       ],
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Get.to(() => const LoginWithPhoneWindow());
-                      },
-                      child: Container(
-                        height: 50.h,
-                        width: 350.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(
-                            width: 2,
-                            color: const Color(0xff28C2A0),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Login with phone number",
-                            style: TextStyle(
-                                color: const Color(0xff0C46C4),
-                                fontFamily: "Roboto",
-                                fontSize: 20.sp),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    InkWell(
-                      onTap: () async {
-                        setState(() {
-                          _isLoadingLogin = true;
-                        });
-                        await signInWithFacebook().then((value) {
-                          Get.snackbar("Information",
-                              "Successfully Login with facebook");
-
-                          setState(() {
-                            _isLoadingLogin = false;
-                          });
-                        }).onError((error, stackTrace) {
-                          setState(() {
-                            _isLoadingLogin = false;
-                          });
-                          debugPrint(error.toString());
-                          Get.snackbar("Error", error.toString());
-                        });
-                      },
-                      child: Container(
-                        height: 50.h,
-                        width: 350.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(
-                            width: 2,
-                            color: const Color(0xff28C2A0),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Image(
-                                  image:
-                                      AssetImage("assets/images/facebook.png")),
-                              Text(
-                                "Login with Facebook",
-                                style: TextStyle(
-                                    color: const Color(0xff0C46C4),
-                                    fontFamily: "Roboto",
-                                    fontSize: 20.sp),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    InkWell(
-                      onTap: () async {
-                        await signInWithGoogle().then((value) {
-                          Get.snackbar(
-                              "Information", "Successfully Login with Google");
-                        }).onError((error, stackTrace) {
-                          debugPrint(error.toString());
-                          Get.snackbar("Error", error.toString());
-                        });
-                      },
-                      child: Container(
-                        height: 50.h,
-                        width: 350.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.r),
-                          border: Border.all(
-                            width: 2,
-                            color: const Color(0xff28C2A0),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              const Image(
-                                  image:
-                                      AssetImage("assets/images/google.png")),
-                              Text(
-                                "Login with Google",
-                                style: TextStyle(
-                                    color: const Color(0xff0C46C4),
-                                    fontFamily: "Roboto",
-                                    fontSize: 20.sp),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                     ),
                     SizedBox(
                       height: 20.h,
